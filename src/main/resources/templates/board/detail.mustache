@@ -24,8 +24,8 @@
 
     <!-- AJAX 좋아요 영역 -->
     <div class="my-3 d-flex align-items-center">
-        <span class="my-like-heart" onclick="likeToggle()">&#10084;</span>
-        <span><b id="likeCount">12</b>명이 이 글을 좋아합니다</span>
+        <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:black" onclick="likeToggle()"></i>
+        <span class="ms-1"><b id="likeCount">12</b>명이 이 글을 좋아합니다</span>
     </div>
 
     <!-- 댓글 -->
@@ -70,10 +70,18 @@
 </div>
 
 <script>
+    let liked = false; // 처음엔 좋아요 상태라고 가정
+
     function likeToggle() {
-        let likeHeart = document.querySelector('.my-like-heart');
-        console.log(likeHeart);
-        likeHeart.classList.toggle('liked');
+        let icon = document.querySelector('#likeIcon');
+
+        if (liked) {
+            icon.style.color = 'black';
+        } else {
+            icon.style.color = 'red';
+        }
+
+        liked = !liked;
     }
 </script>
 
