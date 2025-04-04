@@ -15,13 +15,17 @@ public class UserRespository {
         3. NamedQuery -> Query Method는 함수 이름으로 쿼리 생성 - 사용X
         4. EntityGraph -> 지금 이해 못함 -> 연관 관계 배우고 나서(?
     */
-    
+
     // u : User 객체 안의 모든 필드를 가리킴
     // ? 대신 키워드 바인딩
     public User findByUsername(String username) {
-        return em.createQuery("select u from User u where u.username = :username", User.class)
-                .setParameter("username", username)
-                .getSingleResult();
+        try {
+            return em.createQuery("select u from User u where u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void save(User user) {
