@@ -1,5 +1,7 @@
 package shop.mtcoding.blog.user;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -40,9 +42,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO loginDTO) {
+    public String login(UserRequest.LoginDTO loginDTO, HttpServletResponse response) {
+        //System.out.println(loginDTO);
         User sessionUser = userService.login(loginDTO);
         session.setAttribute("sessionUser", sessionUser);
+        if (loginDTO.getRememberMe() == null) {
+            // username 쿠키를 지워야 한다.
+            Cookie cookie = new Cookie("username", null);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        } else { // on일 경우
+            Cookie cookie = new Cookie("username", loginDTO.getUsername());
+            cookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(cookie);
+        }
+
         return "redirect:/";
     }
 

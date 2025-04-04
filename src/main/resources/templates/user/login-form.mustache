@@ -8,15 +8,15 @@
         <div class="card-body">
             <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
                 <div class="mb-3">
-                    <input type="text" class="form-control" placeholder="Enter username" name="username" value="ssar">
+                    <input type="text" class="form-control" placeholder="Enter username" name="username" id="username">
                 </div>
                 <div class="mb-3">
                     <input type="password" class="form-control" placeholder="Enter password" name="password"
-                           value="1234">
+                           id="password">
                 </div>
                 <!-- ✅ 공개 여부 체크박스 -->
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="true" name="isUsernameCheck" checked>
+                    <input class="form-check-input" type="checkbox" name="rememberMe" checked>
                     <label class="form-check-label" for="isUsernameCheck">
                         아이디를 기억하겠습니까?
                     </label>
@@ -26,5 +26,19 @@
         </div>
     </div>
 </div>
+<script>
+    let rememberUsername = getCookie("username"); // 찾아지면 있고 없으면 null -> 리턴을 안했으면 undefined임
+
+    if (rememberUsername != null) {
+        document.querySelector("#username").value = rememberUsername;
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+</script>
 
 {{> layout/footer}}
