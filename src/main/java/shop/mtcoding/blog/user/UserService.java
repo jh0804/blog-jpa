@@ -11,7 +11,17 @@ public class UserService {
 
     @Transactional
     public void join(UserRequest.JoinDTO joinDTO) {
-        userRespository.save(joinDTO.toEntity());
+        User user = joinDTO.toEntity(); // 1. 비영속 객체
+        System.out.println("비영속 user : " + user.getId());
+        userRespository.save(user);
+        // 4. user : id가 있는 영속 객체 (동기화 된)
+        System.out.println("영속/동기화 user : " + user.getId());
+
+        // TODO : 정리하기
+//        System.out.println("------------");
+//        // select query 안날라간다. -> pc에 이미 있는 값으로 찾으므로
+//        userRespository.findById(4); // pc에서 찾는다. = DB가 아닌 상대적으로 가까운 곳에서 찾았기 때문에 캐싱
+//        System.out.println("------------");
     }
 
     public User login(UserRequest.LoginDTO loginDTO) {
