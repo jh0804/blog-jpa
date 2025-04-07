@@ -22,4 +22,12 @@ public class BoardService {
     public List<Board> 글목록보기(Integer userId) { // 매개변수에 User sessionUser처럼 필요하지 않은 것들을 전부 포함해서 호출하지 말자!
         return boardRepository.findAll(userId);
     }
+
+    public BoardResponse.DetailDTO 글상세보기(int id, Integer userId) {
+        // Board board = boardRepository.findById(id); // LAZY 로딩이므로 Board만 조회해서 board 정보 밖에 없다.
+        // board.getUser().getEmail(); // 원래 null인데 lazy로딩이 발동해서 해당 유저 id로 select가 발동해서 값을 넣어준다. -> 비효율적이므로 안쓴다!
+        Board board = boardRepository.findByIdJoinUser(id);
+        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId);
+        return detailDTO;
+    }
 }

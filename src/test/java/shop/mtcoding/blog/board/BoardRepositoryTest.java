@@ -34,4 +34,19 @@ public class BoardRepositoryTest {
 //        boardList.get(0).getUser().getUsername();
 //        System.out.println("--------------------");
     }
+
+    /*
+     * 1. 쿼리가 어떻게 동작하는지
+     * 2. fetch가 없으면
+     * 3. b.user가 아니면
+     */
+    @Test
+    public void findByIdJoinUser_test() {
+        // given
+        Integer boardId = 1;
+        // when
+        boardRepository.findByIdJoinUser(boardId);
+        // eye
+    }
+
 }

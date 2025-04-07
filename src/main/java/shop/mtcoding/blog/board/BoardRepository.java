@@ -34,4 +34,17 @@ public class BoardRepository {
     public void save(Board board) {
         em.persist(board);
     }
+
+    public Board findById(Integer id) { // LAZY 로딩이므로 join X
+        return em.find(Board.class, id); // 이걸 써야 캐싱한다!
+    }
+
+    public Board findByIdJoinUser(Integer id) { // Board를 조회할건데 User를 join
+        // 객체지향쿼리 - board 객체 안에 있는 user와 join(relation해서 join) 해야하므로 User가 아닌 b.user과 join해야한다.
+        // select b : board에 있는 필드만 projection
+        // join fetch : b.user 안에 있는 것까지 전부 projection
+        Query query = em.createQuery("select b from Board b join fetch b.user u where b.id = :id", Board.class); // inner join의 경우 pk, fk 연결 시 on절 생략 가능
+        query.setParameter("id", id);
+        return (Board) query.getSingleResult();
+    }
 }
