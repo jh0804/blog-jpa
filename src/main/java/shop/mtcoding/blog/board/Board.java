@@ -21,8 +21,8 @@ public class Board {
     private String content;
     private Boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user; // ORM
 
     @CreationTimestamp
     private Timestamp createdAt;
