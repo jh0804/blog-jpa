@@ -19,6 +19,28 @@ public class UserController {
     private final UserService userService;
     private final HttpSession session;
 
+    @GetMapping("/user/update-form")
+    public String updateForm() {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다.");
+        // ViewResolver(view를 찾아줌)의 prefix에 /templates/라고 되어있기 때문. suffix = .mustache
+        return "user/update-form";
+    }
+
+    @PostMapping("/user/update")
+    public String update(UserRequest.UpdateDTO updateDTO) {
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) throw new RuntimeException("인증이 필요합니다.");
+
+        // update user_tb set password = ?, email = ? where id = ?
+        User user = userService.회원정보수정(updateDTO, sessionUser.getId());
+
+        // 세션 동기화 (수정된 객체를 받아서 덮어씌운다)
+        session.setAttribute("sessionUser", user);
+
+        return "redirect:/";
+    }
+
     @GetMapping("/check-username-available/{username}")
     public @ResponseBody Resp<?> checkUsernameAvailable(@PathVariable("username") String username) {
         Map<String, Object> dto = userService.유저네임중복체크(username);

@@ -4,6 +4,12 @@ import lombok.Data;
 
 public class UserRequest {
 
+    @Data
+    public static class UpdateDTO {
+        private String password;
+        private String email;
+    }
+
     // insert 용도의 DTO에는 toEntity 메서드를 만든다.
     @Data
     public static class JoinDTO {
