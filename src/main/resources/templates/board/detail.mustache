@@ -26,8 +26,13 @@
 
     <!-- AJAX 좋아요 영역 -->
     <div class="my-3 d-flex align-items-center">
-        <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:black" onclick="likeToggle()"></i>
-        <span class="ms-1"><b id="likeCount">12</b>명이 이 글을 좋아합니다</span>
+        {{#model.isLove}}
+            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:red" onclick="likeToggle()"></i>
+        {{/model.isLove}}
+        {{^model.isLove}}
+            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:black" onclick="likeToggle()"></i>
+        {{/model.isLove}}
+        <span class="ms-1"><b id="likeCount">{{model.loveCount}}</b>명이 이 글을 좋아합니다</span>
     </div>
 
     <!-- 댓글 -->
