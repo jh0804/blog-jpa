@@ -27,10 +27,12 @@
     <!-- AJAX 좋아요 영역 -->
     <div class="my-3 d-flex align-items-center">
         {{#model.isLove}}
-            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:red" onclick="likeToggle()"></i>
+            <i id="likeIcon" data-liked="true" class="fa fa-heart" style="font-size:20px; color:red"
+               onclick="deleteLove({{model.loveId}})"></i>
         {{/model.isLove}}
         {{^model.isLove}}
-            <i id="likeIcon" class="fa fa-heart" style="font-size:20px; color:black" onclick="likeToggle()"></i>
+            <i id="likeIcon" data-liked="false" class="fa fa-heart" style="font-size:20px; color:black"
+               onclick="saveLove({{model.id}})"></i>
         {{/model.isLove}}
         <span class="ms-1"><b id="likeCount">{{model.loveCount}}</b>명이 이 글을 좋아합니다</span>
     </div>
@@ -77,17 +79,44 @@
 </div>
 
 <script>
-    let liked = false; // 처음엔 좋아요 상태라고 가정
+    let liked = document.querySelector("#likeIcon").dataset.liked;
 
+    async function saveLove(boardId) {
+        let requestBody = {
+            boardId: boardId
+        }
+        let response = await fetch(`/love`, {
+            method: "post",
+            body: JSON.stringify(requestBody),
+            headers: {"Content-Type": "application/json"}
+        });
+        let responseBody = await response.json(); // loveCount, loveId
+
+        //let loveId = responseBody.body.loveId;
+        //let loveCount = responseBody.body.loveCount;
+
+        //likeToggle();
+        location.reload();
+    }
+
+    async function deleteLove(loveId) {
+        let response = await fetch(`/love/${loveId}`, {
+            method: "delete"
+        });
+        let responseBody = await response.json(); // loveCount 응답 받아야 함
+
+        //likeToggle();
+        location.reload();
+    }
+
+    // 빨간색 하트, 검정색 하트
     function likeToggle() {
         let icon = document.querySelector('#likeIcon');
-
         if (liked) {
             icon.style.color = 'black';
         } else {
             icon.style.color = 'red';
         }
-
         liked = !liked;
     }
 </script>

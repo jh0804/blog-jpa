@@ -29,4 +29,8 @@ public class LoveRepository {
         List<Love> loves = query.getResultList();
         return loves;
     }
+
+    public void save(Love love) {
+        em.persist(love);
+    }
 }

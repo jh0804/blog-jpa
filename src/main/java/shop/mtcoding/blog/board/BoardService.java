@@ -36,7 +36,9 @@ public class BoardService {
 
         List<Love> loves = loveRepository.findByBoardId(id);
 
-        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId, isLove, loves.size());
+        Integer loveId = love == null ? null : love.getId();
+
+        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId, isLove, loves.size(), loveId);
         return detailDTO;
     }
 }
