@@ -43,10 +43,12 @@ public class BoardRepositoryTest {
     @Test
     public void findByIdJoinUser_test() {
         // given
-        Integer boardId = 1;
+        Integer boardId = 4;
+        Integer userId = 1;
         // when
-        boardRepository.findByIdJoinUser(boardId);
+        BoardResponse.DetailDTO detailDTO = boardRepository.findDetail(boardId, userId);
         // eye
+        System.out.println(detailDTO);
     }
 
 }
