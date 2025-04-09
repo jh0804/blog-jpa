@@ -3,7 +3,6 @@ package shop.mtcoding.blog.board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shop.mtcoding.blog.board.reply.Reply;
 import shop.mtcoding.blog.board.reply.ReplyRepository;
 import shop.mtcoding.blog.love.Love;
 import shop.mtcoding.blog.love.LoveRepository;
@@ -32,7 +31,7 @@ public class BoardService {
     public BoardResponse.DetailDTO 글상세보기(int id, Integer userId) {
         // Board board = boardRepository.findById(id); // LAZY 로딩이므로 Board만 조회해서 board 정보 밖에 없다.
         // board.getUser().getEmail(); // 원래 null인데 lazy로딩이 발동해서 해당 유저 id로 select가 발동해서 값을 넣어준다. -> 비효율적이므로 안쓴다!
-        Board board = boardRepository.findByIdJoinUser(id);
+        Board board = boardRepository.findByIdJoinUserAndReplies(id);
 
         Love love = loveRepository.findByUserIdAndBoardId(userId, id); // (userId, boardId)
         Long loveCount = loveRepository.findByBoardId(id);
@@ -40,9 +39,7 @@ public class BoardService {
         Integer loveId = love == null ? null : love.getId();
         Boolean isLove = love == null ? false : true;
 
-        List<Reply> replies = replyRepository.findAllByBoardId(id);
-
-        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId, isLove, loveCount, loveId, replies);
+        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId, isLove, loveCount, loveId);
         return detailDTO;
     }
 }

@@ -47,4 +47,12 @@ public class BoardRepository {
         query.setParameter("id", id);
         return (Board) query.getSingleResult();
     }
+
+    // Eager로 해결 가능하지만 LAZY 쓰고 join 쿼리 그냥 짜라
+    public Board findByIdJoinUserAndReplies(Integer id) {
+        // 댓글 안의 user와 join 되어야 한다.
+        Query query = em.createQuery("select b from Board b join fetch b.user left join fetch b.replies r join fetch r.user where b.id = :id", Board.class);
+        query.setParameter("id", id);
+        return (Board) query.getSingleResult();
+    }
 }
