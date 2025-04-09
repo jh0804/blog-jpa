@@ -34,11 +34,11 @@ public class BoardService {
         Love love = loveRepository.findByUserIdAndBoardId(userId, id); // (userId, boardId)
         Boolean isLove = love == null ? false : true;
 
-        List<Love> loves = loveRepository.findByBoardId(id);
+        Long loveCount = loveRepository.findByBoardId(id);
 
         Integer loveId = love == null ? null : love.getId();
 
-        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId, isLove, loves.size(), loveId);
+        BoardResponse.DetailDTO detailDTO = new BoardResponse.DetailDTO(board, userId, isLove, loveCount, loveId);
         return detailDTO;
     }
 }

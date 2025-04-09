@@ -5,8 +5,6 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Repository
 public class LoveRepository {
@@ -23,14 +21,26 @@ public class LoveRepository {
         }
     }
 
-    public List<Love> findByBoardId(int boardId) {
-        Query query = em.createQuery("SELECT lo FROM Love lo where lo.board.id = :boardId");
+    public Long findByBoardId(int boardId) {
+        Query query = em.createQuery("select count(lo) from Love lo where lo.board.id = :boardId");
         query.setParameter("boardId", boardId);
-        List<Love> loves = query.getResultList();
-        return loves;
+
+        Long count = (Long) query.getSingleResult();
+        return count;
     }
 
-    public void save(Love love) {
+    public Love save(Love love) {
         em.persist(love);
+        return love; // PK가 담긴 love
+    }
+
+    public void deleteById(Integer id) {
+        em.createQuery("delete from Love lo where lo.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+    public Love findById(Integer id) {
+        return em.find(Love.class, id);
     }
 }

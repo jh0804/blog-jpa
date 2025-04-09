@@ -5,7 +5,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class Resp<T> {
+public class Resp<T> { // 응답의 공통 DTO
     private Integer status;
     private String msg;
     private T body; // 타입 결정 X -> 동적으로 받고 싶음

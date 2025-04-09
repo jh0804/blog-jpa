@@ -1,4 +1,7 @@
 {{> layout/header}}
+
+<input type="hidden" id="boarId" value="{{model.id}}">;
+
 <div class="container p-5">
 
     <!-- 수정삭제버튼 -->
@@ -27,14 +30,14 @@
     <!-- AJAX 좋아요 영역 -->
     <div class="my-3 d-flex align-items-center">
         {{#model.isLove}}
-            <i id="likeIcon" data-liked="true" class="fa fa-heart" style="font-size:20px; color:red"
+            <i id="loveIcon" class="fa fa-heart" style="font-size:20px; color:red"
                onclick="deleteLove({{model.loveId}})"></i>
         {{/model.isLove}}
         {{^model.isLove}}
-            <i id="likeIcon" data-liked="false" class="fa fa-heart" style="font-size:20px; color:black"
-               onclick="saveLove({{model.id}})"></i>
+            <i id="loveIcon" class="fa fa-heart" style="font-size:20px; color:black"
+               onclick="saveLove()"></i>
         {{/model.isLove}}
-        <span class="ms-1"><b id="likeCount">{{model.loveCount}}</b>명이 이 글을 좋아합니다</span>
+        <span class="ms-1"><b id="loveCount">{{model.loveCount}}</b>명이 이 글을 좋아합니다</span>
     </div>
 
     <!-- 댓글 -->
@@ -79,45 +82,48 @@
 </div>
 
 <script>
-    let liked = document.querySelector("#likeIcon").dataset.liked;
 
-    async function saveLove(boardId) {
-        let requestBody = {
-            boardId: boardId
-        }
+    // 다른사람이 좋아요 하는 걸 관찰할 수 있음
+    setInterval(() => {
+        location.reload();
+    }, 1000);
+
+    // input은 전역으로 제일 위에 올려두고 여기서 땡긴다.
+    // dataset은 함수 안에다가 쓴다. -> 밖에서 써도 문제 생겼을 때 해결 가능하면 되긴 함
+
+    let boardId = document.querySelector("#boarId").value;
+
+    async function saveLove() {
+        let requestBody = {boardId: boardId};
         let response = await fetch(`/love`, {
-            method: "post",
+            method: "POST",
             body: JSON.stringify(requestBody),
             headers: {"Content-Type": "application/json"}
         });
-        let responseBody = await response.json(); // loveCount, loveId
+        let responseBody = await response.json(); // { loveId, loveCount }
+        console.log(responseBody);
 
-        //let loveId = responseBody.body.loveId;
-        //let loveCount = responseBody.body.loveCount;
-
-        //likeToggle();
-        location.reload();
+        // DOM 업데이트
+        let icon = document.querySelector('#loveIcon');
+        let loveCount = document.querySelector('#loveCount');
+        icon.style.color = 'red';
+        icon.setAttribute('onclick', `deleteLove(${responseBody.loveId})`); // {responseBody.loveId} : dataset에 심을 수 ㅇ
+        loveCount.innerHTML = responseBody.body.loveCount;
     }
 
     async function deleteLove(loveId) {
         let response = await fetch(`/love/${loveId}`, {
-            method: "delete"
+            method: "DELETE"
         });
-        let responseBody = await response.json(); // loveCount 응답 받아야 함
+        let responseBody = await response.json(); // { loveCount } // text/plain -> response.text()
+        console.log(responseBody);
 
-        //likeToggle();
-        location.reload();
-    }
-
-    // 빨간색 하트, 검정색 하트
-    function likeToggle() {
-        let icon = document.querySelector('#likeIcon');
-        if (liked) {
-            icon.style.color = 'black';
-        } else {
-            icon.style.color = 'red';
-        }
-        liked = !liked;
+        // DOM 업데이트
+        let icon = document.querySelector('#loveIcon');
+        let loveCount = document.querySelector('#loveCount');
+        icon.style.color = 'black';
+        icon.setAttribute('onclick', `saveLove()`);
+        loveCount.innerHTML = responseBody.body.loveCount;
     }
 </script>
 
