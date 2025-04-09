@@ -23,6 +23,8 @@ public class LoveService {
         Love lovePs = loveRepository.findById(id);
         if (lovePs == null) throw new RuntimeException("취소할 수 있는 좋아요가 없습니다.");
 
+        // 권한체크() : lovePs.getUser().getId()와 sessionUserId 비교
+
         Integer boardId = lovePs.getBoard().getId();
 
         loveRepository.deleteById(id);

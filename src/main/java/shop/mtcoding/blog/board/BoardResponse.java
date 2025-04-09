@@ -1,8 +1,10 @@
 package shop.mtcoding.blog.board;
 
 import lombok.Data;
+import shop.mtcoding.blog.board.reply.Reply;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class BoardResponse {
 
@@ -19,9 +21,11 @@ public class BoardResponse {
         private Timestamp createdAt;
         private Integer loveId;
 
+        private List<Reply> replies;
+
         // model에 있는 것을 옮기는 것
         // 깊은 복사 : 객체를 그대로 가져와서 getId 등으로 넣는게 낫다!
-        public DetailDTO(Board board, Integer sessionUserId, Boolean isLove, Long loveCount, Integer loveId) {
+        public DetailDTO(Board board, Integer sessionUserId, Boolean isLove, Long loveCount, Integer loveId, List<Reply> replies) {
             this.id = board.getId();
             this.title = board.getTitle();
             this.content = board.getContent();
@@ -32,6 +36,7 @@ public class BoardResponse {
             this.isLove = isLove;
             this.loveCount = loveCount;
             this.loveId = loveId;
+            this.replies = replies;
         }
     }
 }

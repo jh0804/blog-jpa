@@ -1,6 +1,6 @@
 {{> layout/header}}
 
-<input type="hidden" id="boarId" value="{{model.id}}">;
+<input type="hidden" id="boarId" value="{{model.id}}">
 
 <div class="container p-5">
 
@@ -57,26 +57,19 @@
             <b>댓글리스트</b>
         </div>
         <div class="list-group">
-            <!-- 댓글아이템 -->
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="d-flex">
-                    <div class="px-1 me-1 bg-primary text-white rounded">cos</div>
-                    <div>댓글 내용입니다</div>
+            {{#model.replies}}
+                <!-- 댓글아이템 -->
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex">
+                        <div class="px-1 me-1 bg-primary text-white rounded">{{user.username}}</div>
+                        <div>{{content}}</div>
+                    </div>
+                    <!-- isReplyOwner = true 이면 🗑이 보임 -->
+                    <form action="/reply/{{id}}/delete" method="post">
+                        <button class="btn">🗑</button>
+                    </form>
                 </div>
-                <form action="/reply/1/delete" method="post">
-                    <button class="btn">🗑</button>
-                </form>
-            </div>
-            <!-- 댓글아이템 -->
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="d-flex">
-                    <div class="px-1 me-1 bg-primary text-white rounded">ssar</div>
-                    <div>댓글 내용입니다</div>
-                </div>
-                <form action="/reply/1/delete" method="post">
-                    <button class="btn">🗑</button>
-                </form>
-            </div>
+            {{/model.replies}}
         </div>
     </div>
 </div>
@@ -84,9 +77,9 @@
 <script>
 
     // 다른사람이 좋아요 하는 걸 관찰할 수 있음
-    setInterval(() => {
-        location.reload();
-    }, 1000);
+    // setInterval(() => {
+    //     location.reload();
+    // }, 1000);
 
     // input은 전역으로 제일 위에 올려두고 여기서 땡긴다.
     // dataset은 함수 안에다가 쓴다. -> 밖에서 써도 문제 생겼을 때 해결 가능하면 되긴 함
