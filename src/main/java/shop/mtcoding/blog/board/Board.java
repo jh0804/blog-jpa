@@ -28,7 +28,9 @@ public class Board {
     private User user; // ORM
 
     // OneToMany는 컬럼이 만들어지지 X, 조회 용도 -> getter
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY) // FK의 필드명 -> FK가 어디인지 알려준다 (FK의 주인)
+    // FK의 필드명 -> FK가 어디인지 알려준다 (FK의 주인)
+    //
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>(); // 없을 수도 있으니까 초기화
 
     @CreationTimestamp

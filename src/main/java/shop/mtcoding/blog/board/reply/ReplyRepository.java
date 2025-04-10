@@ -18,4 +18,20 @@ public class ReplyRepository {
         List<Reply> replies = query.getResultList();
         return replies;
     }
+
+    public Reply save(Reply reply) {
+        em.persist(reply);
+        return reply; // 혹시나 자기자신을 돌려받아야 하는 상황이 생길수도 있으므로
+    }
+
+    // pk -> index를 탄다 / 캐싱
+    public Reply findById(Integer id) {
+        return em.find(Reply.class, id);
+    }
+
+    public void deleteById(Integer id) {
+        em.createQuery("delete from Reply r where r.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
 }

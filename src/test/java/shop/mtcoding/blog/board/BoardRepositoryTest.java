@@ -60,7 +60,7 @@ public class BoardRepositoryTest {
     @Test
     public void findByIdJoinUserAndReplies_test() {
         // given
-        Integer boardId = 4;
+        Integer boardId = 1;
         Board board = boardRepository.findByIdJoinUserAndReplies(boardId);
 
 

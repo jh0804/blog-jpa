@@ -4,6 +4,7 @@ import lombok.Data;
 import shop.mtcoding.blog.board.reply.Reply;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BoardResponse {
@@ -21,7 +22,25 @@ public class BoardResponse {
         private Timestamp createdAt;
         private Integer loveId;
 
-        private List<Reply> replies;
+        private List<ReplyDTO> replies;
+
+        // DetailDTO 안에서만 쓸거니까 내부클래스로
+        @Data
+        public class ReplyDTO {
+            private Integer id;
+            private String content;
+            // 유저 객체가 굳이 필요 없고 username만 필요
+            private String username;
+            private Boolean isOwner;
+
+            // Board의 Reply를 for문 돌려서 여기에 옮기면 됨
+            public ReplyDTO(Reply reply, Integer sessionUserId) {
+                this.id = reply.getId();
+                this.content = reply.getContent();
+                this.username = reply.getUser().getUsername(); // join했기 때문에 Lazy 로딩 X
+                this.isOwner = reply.getUser().getId().equals(sessionUserId); // wrapping class는 equals로 비교
+            }
+        }
 
         // model에 있는 것을 옮기는 것
         // 깊은 복사 : 객체를 그대로 가져와서 getId 등으로 넣는게 낫다!
@@ -36,7 +55,14 @@ public class BoardResponse {
             this.isLove = isLove;
             this.loveCount = loveCount;
             this.loveId = loveId;
-            this.replies = board.getReplies();
+
+            // ReplyDTO를 repliesDTO 컬렉션으로 옮기기
+            List<ReplyDTO> repliesDTO = new ArrayList<>();
+            for (Reply reply : board.getReplies()) {
+                ReplyDTO replyDTO = new ReplyDTO(reply, sessionUserId);
+                repliesDTO.add(replyDTO);
+            }
+            this.replies = repliesDTO;
         }
     }
 }
