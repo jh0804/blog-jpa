@@ -17,6 +17,18 @@ public class BoardService {
     private final LoveRepository loveRepository;
     private final ReplyRepository replyRepository;
 
+    // TODO : ajax 사용X
+    @Transactional
+    public void 글수정() {
+
+    }
+
+    // TODO : ajax 사용X
+    @Transactional
+    public void 글삭제() {
+
+    }// 객체 찾아서 객체 상태 바꾸고 dirty checking으로
+
     @Transactional
     public void 글쓰기(BoardRequest.SaveDTO saveDTO, User sessionUser) {
         Board board = saveDTO.toEntity(sessionUser);

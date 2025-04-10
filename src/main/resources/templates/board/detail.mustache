@@ -99,12 +99,16 @@
         let responseBody = await response.json(); // { loveId, loveCount }
         console.log(responseBody);
 
-        // DOM 업데이트
-        let icon = document.querySelector('#loveIcon');
-        let loveCount = document.querySelector('#loveCount');
-        icon.style.color = 'red';
-        icon.setAttribute('onclick', `deleteLove(${responseBody.loveId})`); // {responseBody.loveId} : dataset에 심을 수 ㅇ
-        loveCount.innerHTML = responseBody.body.loveCount;
+        if (responseBody.status != 200) {
+            alert(responseBody.msg);
+        } else {
+            // DOM 업데이트
+            let icon = document.querySelector('#loveIcon');
+            let loveCount = document.querySelector('#loveCount');
+            icon.style.color = 'red';
+            icon.setAttribute('onclick', `deleteLove(${responseBody.loveId})`); // {responseBody.loveId} : dataset에 심을 수 ㅇ
+            loveCount.innerHTML = responseBody.body.loveCount;
+        }
     }
 
     async function deleteLove(loveId) {
@@ -114,12 +118,16 @@
         let responseBody = await response.json(); // { loveCount } // text/plain -> response.text()
         console.log(responseBody);
 
-        // DOM 업데이트
-        let icon = document.querySelector('#loveIcon');
-        let loveCount = document.querySelector('#loveCount');
-        icon.style.color = 'black';
-        icon.setAttribute('onclick', `saveLove()`);
-        loveCount.innerHTML = responseBody.body.loveCount;
+        if (responseBody.status != 200) {
+            alert(responseBody.msg);
+        } else {
+            // DOM 업데이트
+            let icon = document.querySelector('#loveIcon');
+            let loveCount = document.querySelector('#loveCount');
+            icon.style.color = 'black';
+            icon.setAttribute('onclick', `saveLove()`);
+            loveCount.innerHTML = responseBody.body.loveCount;
+        }
     }
 </script>
 
