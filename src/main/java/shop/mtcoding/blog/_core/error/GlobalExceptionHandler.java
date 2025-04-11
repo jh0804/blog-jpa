@@ -58,6 +58,7 @@ public class GlobalExceptionHandler {
         String html = """
                 <script>
                     alert('${msg}');
+                    history.back();
                 </script>
                 """.replace("${msg}", e.getMessage());
 
