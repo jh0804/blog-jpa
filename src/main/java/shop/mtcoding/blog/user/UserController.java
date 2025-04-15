@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import shop.mtcoding.blog._core.error.anno.MyAfter;
+import shop.mtcoding.blog._core.error.anno.MyAround;
+import shop.mtcoding.blog._core.error.anno.MyBefore;
 import shop.mtcoding.blog._core.error.ex.Exception400;
 import shop.mtcoding.blog._core.util.Resp;
 
@@ -24,6 +27,13 @@ import java.util.regex.Pattern;
 public class UserController {
     private final UserService userService;
     private final HttpSession session;
+
+    @MyAround
+    @GetMapping("/v2/around")
+    public @ResponseBody String around() {
+        System.out.println("around");
+        return "good"; // Proceed 안에 "good"이 return 됨?
+    }
 
     @GetMapping("/user/update-form")
     public String updateForm() {
@@ -50,13 +60,17 @@ public class UserController {
         return Resp.ok(dto);
     }
 
+    @MyBefore // 메서드 호출 직전에 실행됨 -> 로그 찍어봐야 알 수 있음
     @GetMapping("/join-form")
     public String joinForm() {
+        System.out.println("joinForm 호출됨");
         return "user/join-form";
     }
 
+    @MyAfter
     @PostMapping("/join")
     public String join(@Valid UserRequest.JoinDTO joinDTO, Errors errors) {
+        System.out.println("join 호출됨");
 
          // 부가 로직
          if(errors.hasErrors()) {
