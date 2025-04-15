@@ -16,6 +16,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/love/**") // 지워도 되지만 그냥 두고 하나 더 등록하는 게 낫다
                 .addPathPatterns("/api/love/**")
                 .addPathPatterns("/reply/**")
+                .excludePathPatterns("/api/check-username-available/**")
                 .excludePathPatterns("/board/{id:\\d+}"); // 예외자리 - {id}는 정규표현식으로 처리
     }
 }
