@@ -32,8 +32,14 @@ public class BoardService {
     }
 
     // userId가 없을 수도 있으므로 Integer 타입으로 지정해서 null까지 처리할 수 있도록 한다.
-    public List<Board> 글목록보기(Integer userId) { // 매개변수에 User sessionUser처럼 필요하지 않은 것들을 전부 포함해서 호출하지 말자!
-        return boardRepository.findAll(userId);
+    public BoardResponse.MainDTO 글목록보기(Integer userId, Integer page) {
+        if (userId == null) {
+            List<Board> boards = boardRepository.findAll(page);
+            return new BoardResponse.MainDTO(boards, page - 1, page + 1);
+        } else {
+            List<Board> boards = boardRepository.findAll(userId, page);
+            return new BoardResponse.MainDTO(boards, page - 1, page + 1);
+        }
     }
 
     public BoardResponse.DetailDTO 글상세보기(int id, Integer userId) {

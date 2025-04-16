@@ -9,6 +9,22 @@ import java.util.List;
 
 public class BoardResponse {
 
+    // 페이징 -> 현재 페이지 번호와 다음 페이지 번호를 넘겨줘야 됨 -> DTO 만듦
+    @Data
+    public static class MainDTO {
+        List<Board> boards;
+        private Integer prev;
+        private Integer next;
+        private Boolean isFirst;
+        private Boolean isLast;
+
+        public MainDTO(List<Board> boards, Integer prev, Integer next) {
+            this.boards = boards;
+            this.prev = prev;
+            this.next = next;
+        }
+    }
+
     @Data
     public static class DetailDTO {
         private Integer id;
