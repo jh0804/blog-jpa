@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/user/update")
-    public String update(UserRequest.UpdateDTO updateDTO) {
+    public String update(@Valid UserRequest.UpdateDTO updateDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
 
         // update user_tb set password = ?, email = ? where id = ?
@@ -56,18 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(@Valid UserRequest.JoinDTO joinDTO, Errors errors) {
-
-         // 부가 로직
-         if(errors.hasErrors()) {
-            List<FieldError> fErrors = errors.getFieldErrors();
-
-            // 필드가 여러 개지만 에러 메세지를 유저에게 여러개 전달X
-            for(FieldError fieldError : fErrors) {
-                // 순서 보장X
-                throw new Exception400(fieldError.getField()+":"+fieldError.getDefaultMessage()); // fieldError.getField() = > e.g. username
-            }
-         }
+    public String join(@Valid UserRequest.JoinDTO joinDTO, Errors errors) { // 여기서 errors를 안써도 errors가 있어야 AOP를
 
         // 유효성 검사 -> AOP
         // 빈생성자 + setter 호출됨
@@ -92,16 +81,6 @@ public class UserController {
     @PostMapping("/login")
     // Errors errors 위치 중요!!! @Valid 바로 다음 매개변수 자리에 있어야 됨
     public String login(@Valid UserRequest.LoginDTO loginDTO, Errors errors, HttpServletResponse response) {
-
-        // 부가 로직
-        if(errors.hasErrors()) {
-            List<FieldError> fErrors = errors.getFieldErrors();
-            // 에러 메세지를 유저에게 여러개 전달하는 건 좋은 선택X
-            for(FieldError fieldError : fErrors) {
-                // 순서 보장X
-                throw new Exception400(fieldError.getField()+":"+fieldError.getDefaultMessage()); // fieldError.getField() = > e.g. username
-            }
-        }
 
         // 핵심 로직
         //System.out.println(loginDTO);

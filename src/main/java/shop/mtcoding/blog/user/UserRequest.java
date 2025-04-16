@@ -8,7 +8,9 @@ public class UserRequest {
 
     @Data
     public static class UpdateDTO {
+        @Size(min = 4, max = 20)
         private String password;
+        @Pattern(regexp = "^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$", message = "이메일 형식으로 적어주세요")
         private String email;
     }
 

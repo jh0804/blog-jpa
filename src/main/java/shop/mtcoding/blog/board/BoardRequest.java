@@ -1,5 +1,8 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import shop.mtcoding.blog.user.User;
 
@@ -7,7 +10,9 @@ public class BoardRequest {
 
     @Data
     public static class SaveDTO {
+        @NotEmpty(message="제목을 입력하세요")
         private String title;
+        @NotEmpty(message="내용을 입력하세요")
         private String content;
         private String isPublic;
 
@@ -26,7 +31,12 @@ public class BoardRequest {
     
     @Data
     public static class UpdateDTO {
+        // title=제목1&content=내용1 -> isPublic은 null이다. (name(key)이 아예 없으면)
+        // title=제목1&content=내용1&isPublic -> isPublic은 ""(비어있음)이다. (name(key)은 있고 value가 없으면)
+        // title=제목1&content=내용1&isPublic=  -> isPublic은 " "(space)이다. (name(key)은 있고 value가 없으면)
+        @NotEmpty(message="제목을 입력하세요") // null, " "(space), ""(비어있음)
         private String title;
+        @NotEmpty(message="내용을 입력하세요")
         private String content;
         private String isPublic;
 
