@@ -34,11 +34,13 @@ public class BoardService {
     // userId가 없을 수도 있으므로 Integer 타입으로 지정해서 null까지 처리할 수 있도록 한다.
     public BoardResponse.MainDTO 글목록보기(Integer userId, Integer page) {
         if (userId == null) {
+            Long totalCount = boardRepository.totalCount();
             List<Board> boards = boardRepository.findAll(page);
-            return new BoardResponse.MainDTO(boards, page - 1, page + 1);
+            return new BoardResponse.MainDTO(boards, page, totalCount.intValue());
         } else {
+            Long totalCount = boardRepository.totalCount(userId);
             List<Board> boards = boardRepository.findAll(userId, page);
-            return new BoardResponse.MainDTO(boards, page - 1, page + 1);
+            return new BoardResponse.MainDTO(boards, page, totalCount.intValue());
         }
     }
 

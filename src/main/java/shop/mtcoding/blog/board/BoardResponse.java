@@ -15,13 +15,31 @@ public class BoardResponse {
         List<Board> boards;
         private Integer prev;
         private Integer next;
-        private Boolean isFirst;
-        private Boolean isLast;
+        private Integer size;
+        private Integer totalCount;
+        private Integer totalPage;
+        private Integer current; // service에서 integer page는 currentPasge인데 넘어가는 값이 아니므로 current가 따로 있어야
+        private Boolean isFirst; // currentPage를 알아야 된다.
+        private Boolean isLast; // totalCount(<- 그룹함수로 count해야 됨), size = 3, totalPage == current
+        private List<Integer> numbers; // 20개 [1, 2, 3, 4, 5, 6, 7] -> model.numbers -> 오브젝트 필드명이 없음 => {{.}}
 
-        public MainDTO(List<Board> boards, Integer prev, Integer next) {
+        public MainDTO(List<Board> boards, Integer current, Integer totalCount) {
             this.boards = boards;
-            this.prev = prev;
-            this.next = next;
+            this.prev = current - 1;
+            this.next = current + 1;
+            this.size = 3; // 일관성 유지를 위해 원래는 final로 만들어놓고 써야 됨
+            this.totalCount = totalCount;  // given으로 두고 먼저 만들고 나서 수정하면 됨! 현재 boards.size()는 3이므로 db에서 들고와야 됨!
+            this.totalPage = makeTotalPage(totalCount, size);
+            this.isFirst = current == 0;
+            // 마지막 페이지
+            this.isLast = (totalPage-1) == current; // current는 0부터고 페이지는 2이므로
+            System.out.println("isLast: " + isLast); // 디버깅
+        }
+
+        private Integer makeTotalPage(int totalCount, int size) {
+            // rest = 남은 페이지
+            int rest = totalCount % size > 0 ? 1 : 0; // 6 - > 0, 7 -> 1, 8 -> 2
+            return totalCount / size + rest; // 전체 페이지
         }
     }
 

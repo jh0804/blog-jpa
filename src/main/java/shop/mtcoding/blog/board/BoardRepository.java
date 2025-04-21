@@ -12,6 +12,24 @@ import java.util.List;
 public class BoardRepository {
     private final EntityManager em;
 
+    // 그룹함수 -> Long으로 return
+    // 일단 로그인 안 했을때부터 생각하고 코드짜기!!!)
+    // 1. 로그인 안했을때 -> 4개
+    // 2.1 로그인 했을때 => ssar -> 5개
+    // 2.2 로그인 했을때 => ssar이 아니면 -> 4개
+    public Long totalCount() {
+        Query query = em.createQuery("select count(b) from Board b where b.isPublic = true", Long.class); // 스칼라 값이므로 Board.class가 아닌 Long.class
+        query.getSingleResult();
+        return (Long) query.getSingleResult();
+    }
+
+    public Long totalCount(int userId) {
+        Query query = em.createQuery("select count(b) from Board b where b.isPublic = true or b.user.id = :userId", Long.class); // 스칼라 값이므로 Board.class가 아닌 Long.class
+        query.setParameter("userId", userId);
+        query.getSingleResult();
+        return (Long) query.getSingleResult();
+    }
+
     // locahost:8080?page=0
     public List<Board> findAll(int page) {
         // select * from board_tb limit 3, 3;
