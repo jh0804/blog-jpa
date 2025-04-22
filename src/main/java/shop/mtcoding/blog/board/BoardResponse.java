@@ -30,10 +30,15 @@ public class BoardResponse {
             this.size = 3; // 일관성 유지를 위해 원래는 final로 만들어놓고 써야 됨
             this.totalCount = totalCount;  // given으로 두고 먼저 만들고 나서 수정하면 됨! 현재 boards.size()는 3이므로 db에서 들고와야 됨!
             this.totalPage = makeTotalPage(totalCount, size);
+            System.out.println("totalPage: " + totalPage);
             this.isFirst = current == 0;
             // 마지막 페이지
             this.isLast = (totalPage-1) == current; // current는 0부터고 페이지는 2이므로
-            System.out.println("isLast: " + isLast); // 디버깅
+//            System.out.println("isLast: " + isLast); // 디버깅
+
+            this.numbers = makeNumbers(current, totalPage);
+//            System.out.println("numbers: " + numbers);
+
         }
 
         private Integer makeTotalPage(int totalCount, int size) {
@@ -41,6 +46,32 @@ public class BoardResponse {
             int rest = totalCount % size > 0 ? 1 : 0; // 6 - > 0, 7 -> 1, 8 -> 2
             return totalCount / size + rest; // 전체 페이지
         }
+
+//        private List<Integer> makeNumbers(int totalPage, int pageNumberSize) {
+//            for (int i = 0; i < totalPage; i++) {
+//                this.numbers.add(i);
+//            }
+//            return numbers;
+//        }
+
+        // 현재 페이지가 0~4이면 current / pageNumberSize = 0 => numbers = [0, 1, 2, 3, 4]
+        // 현재 페이지가 5~6이면 current / pageNumberSize = 1 => numbers = [5, 6]
+        // current % pageNumberSize = 0 ~ 4
+        // totalPage = 7
+        private List<Integer> makeNumbers(int current, int totalPage) {
+            List<Integer> numbers = new ArrayList<>();
+
+            int start = (current / 5) * 5;
+            int end = Math.min(start + 5, totalPage);
+
+            for (int i = start; i < end; i++) {
+                numbers.add(i);
+            }
+
+            return numbers;
+        }
+
+
     }
 
     @Data
