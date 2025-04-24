@@ -11,7 +11,7 @@ public class BoardResponse {
 
     // 페이징 -> 현재 페이지 번호와 다음 페이지 번호를 넘겨줘야 됨 -> DTO 만듦
     @Data
-    public static class MainDTO {
+    public static class DTO {
         List<Board> boards;
         private Integer prev;
         private Integer next;
@@ -22,8 +22,9 @@ public class BoardResponse {
         private Boolean isFirst; // currentPage를 알아야 된다.
         private Boolean isLast; // totalCount(<- 그룹함수로 count해야 됨), size = 3, totalPage == current
         private List<Integer> numbers; // 20개 [1, 2, 3, 4, 5, 6, 7] -> model.numbers -> 오브젝트 필드명이 없음 => {{.}}
+        private String keyword;
 
-        public MainDTO(List<Board> boards, Integer current, Integer totalCount) {
+        public DTO(List<Board> boards, Integer current, Integer totalCount, String keyword) {
             this.boards = boards;
             this.prev = current - 1;
             this.next = current + 1;
@@ -38,6 +39,8 @@ public class BoardResponse {
 
             this.numbers = makeNumbers(current, totalPage);
 //            System.out.println("numbers: " + numbers);
+            
+            this.keyword = keyword; // 경우의 수 : keyword 값이 있거나, keyword가 null이거나
 
         }
 

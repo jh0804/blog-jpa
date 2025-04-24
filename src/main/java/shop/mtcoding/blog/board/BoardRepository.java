@@ -17,34 +17,66 @@ public class BoardRepository {
     // 1. 로그인 안했을때 -> 4개
     // 2.1 로그인 했을때 => ssar -> 5개
     // 2.2 로그인 했을때 => ssar이 아니면 -> 4개
-    public Long totalCount() {
-        Query query = em.createQuery("select count(b) from Board b where b.isPublic = true", Long.class); // 스칼라 값이므로 Board.class가 아닌 Long.class
-        query.getSingleResult();
+    // 1. 로그인 안 했을 때 : 4개
+    public Long totalCount(String keyword) {
+        String sql = "";
+        if (!(keyword.isBlank()))
+            sql += "select count(b) from Board b where b.isPublic = true and b.title like :keyword";
+        else sql += "select count(b) from Board b where b.isPublic = true";
+        Query query = em.createQuery(sql, Long.class);
+        // keyword를 포함 : title like %keyword%
+        if (!(keyword.isBlank())) query.setParameter("keyword", "%" + keyword + "%");
         return (Long) query.getSingleResult();
     }
-
-    public Long totalCount(int userId) {
-        Query query = em.createQuery("select count(b) from Board b where b.isPublic = true or b.user.id = :userId", Long.class); // 스칼라 값이므로 Board.class가 아닌 Long.class
+    public Long totalCount(int userId, String keyword) {
+        String sql = "";
+        if (!(keyword.isBlank()))
+            sql += "select count(b) from Board b where b.isPublic = true or b.user.id = :userId and b.title like :keyword";
+        else sql += "select count(b) from Board b where b.isPublic = true or b.user.id = :userId";
+        Query query = em.createQuery(sql, Long.class);
+        // keyword를 포함 : title like %keyword%
+        if (!(keyword.isBlank())) query.setParameter("keyword", "%" + keyword + "%");
         query.setParameter("userId", userId);
-        query.getSingleResult();
         return (Long) query.getSingleResult();
     }
 
     // locahost:8080?page=0
-    public List<Board> findAll(int page) {
-        // select * from board_tb limit 3, 3;
-        String sql = "select b from Board b where b.isPublic = true order by b.id desc";
+    public List<Board> findAll(int page, String keyword) {
+        String sql ;
+        if (keyword.isBlank()) {
+            sql = "select b from Board b where b.isPublic = true order by b.id desc";
+        }else{
+            sql = "select b from Board b where b.isPublic = true and b.title like :keyword order by b.id desc";
+        }
+
+
         Query query = em.createQuery(sql, Board.class);
+        if (!keyword.isBlank()){
+            query.setParameter("keyword","%" + keyword + "%");
+        }
+        // select * from board_tb limit 3, 3;
         query.setFirstResult(page * 3);
         query.setMaxResults(3);
 
         return query.getResultList();
     }
+    
+    // 동적 쿼리 vs 오버로딩(추천) vs 동적 바인딩(더 추천)
+    // findAll을 합칠 수는 있지만 if가 많아져서 복잡
+    public List<Board> findAll(Integer userId, int page, String keyword) {
 
-    public List<Board> findAll(Integer userId, int page) {
-        String sql = "select b from Board b where b.isPublic = true or b.user.id = :userId order by b.id desc";
+        String sql ;
+        if (keyword.isBlank()){
+            sql = "select b from Board b where b.isPublic = true or b.user.id = :userId order by b.id desc";
+        }else{
+            sql = "select b from Board b where b.isPublic = true or b.user.id = :userId and b.title like :keyword order by b.id desc";
+        }
+
         Query query = em.createQuery(sql, Board.class);
         query.setParameter("userId", userId);
+        if (!keyword.isBlank()){
+            query.setParameter("keyword","%" + keyword + "%");
+        }
         query.setFirstResult(page * 3);
         query.setMaxResults(3);
         return query.getResultList();

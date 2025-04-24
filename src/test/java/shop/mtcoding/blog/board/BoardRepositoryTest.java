@@ -22,7 +22,7 @@ public class BoardRepositoryTest {
         Integer userId = null;
 
         // when -> 테스트할 함수 호출 -> 쿼리 확인
-        List<Board> boardList = boardRepository.findAll(userId);
+        List<Board> boardList = boardRepository.findAll(userId,null);
 
         // eye
         for (Board board : boardList) {
